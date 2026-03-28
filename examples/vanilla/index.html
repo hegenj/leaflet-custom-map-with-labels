@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet Custom Labels - GeoJSON Example</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import { mapWithLabels, L } from "../../dist/index.js";
+
+      async function initMap() {
+        // Initialize map with custom factory
+        const map = mapWithLabels("map").setView([47.1625, 19.5033], 7);
+
+        // Add standard OSM tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; OpenStreetMap contributors",
+        }).addTo(map);
+
+        try {
+          // Fetch the local GeoJSON file
+          const response = await fetch("hu_counties.geojson");
+          if (!response.ok) throw new Error("Failed to load GeoJSON file");
+
+          const countyData = await response.json();
+
+          // Add GeoJSON layer with custom label logic
+          L.geoJson(countyData, {
+            style: {
+              color: "#34495e",
+              weight: 1,
+              fillColor: "#95a5a6",
+              fillOpacity: 0.2,
+              color: "blue",
+            },
+            // Library specific options
+            label: (layer) => {
+              // Adjust property key based on your GeoJSON (e.g., 'name', 'NAME_1')
+              return layer.feature.properties.name || "Name is missing";
+            },
+            labelPos: "cc",
+            labelStyle: {
+              fontWeight: "bold",
+              whiteSpace: "normal",
+              minWidth: "40px",
+              textAlign: "center",
+              color: "brown",
+            },
+            labelPriority: 5e4,
+            // Optional: Use a property for label priority
+            priority: (layer) => layer.feature.properties.population || 0,
+          }).addTo(map);
+
+          console.log("Map initialized with county labels");
+        } catch (error) {
+          console.error("Initialization error:", error);
+        }
+      }
+
+      initMap();
+    </script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100vh;
+        width: 100vw;
+      }
+      .info-panel {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 12px;
+        border-radius: 4px;
+        font-family: sans-serif;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="info-panel">
+      <strong>Hungary Counties</strong><br />
+      Labels rendered via Canvas
+    </div>
+    <div id="map"></div>
+  </body>
+</html>

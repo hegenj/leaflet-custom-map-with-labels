@@ -83,16 +83,17 @@ declare module "leaflet" {
 }
 
 // plugin init
-initMapWithLabelsPlugin(L_base);
 
-// export the plugin's mapWithLabels function and the extended L namespace
-const L_extended = L_base;
+const plugin = initMapWithLabelsPlugin(L_base);
 
-export { L_extended as L };
+// 2. Export the original Leaflet
+export const L = L_base;
 
+// 3. Export the factory function DIRECTLY from the plugin result
 export const mapWithLabels = (
   id: string | HTMLElement,
   options?: L_base.MapOptions,
 ) => {
-  return (L_extended as any).mapWithLabels(id, options) as L_base.MapWithLabels;
+  // We use the factory returned by the plugin, not L.mapWithLabels
+  return plugin.mapWithLabels(id, options) as L_base.MapWithLabels;
 };
