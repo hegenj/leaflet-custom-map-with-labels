@@ -72,11 +72,6 @@ declare module "leaflet" {
     markerWithLabelOnly?: boolean;
   }
 
-  // interface GeoJSONOptions<
-  //   P = any,
-  //   G extends import("geojson").Geometry = import("geojson").Geometry,
-  // > extends LayerOptions<P> {}
-
   class MapWithLabels extends Map {
     _updateLabels(): void;
   }
