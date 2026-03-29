@@ -134,6 +134,15 @@ These options extend the standard Leaflet `GeoJSON` options:
 
 ## Examples
 
+📂 Repository Overview
+
+| Framework         | Folder             | Entry Point                |
+| :---------------- | :----------------- | :------------------------- |
+| 🍦 **Vanilla JS** | `examples/vanilla` | `index.html`               |
+| 🅰️ **Angular**    | `examples/angular` | `src/app/map.component.ts` |
+| ⚛️ **React**      | `examples/react`   | `src/App.tsx`              |
+| 🟢 **Vue.js 3**   | `examples/vue`     | `src/App.vue`              |
+
 ### 1. Prerequisites
 
 Ensure you have **Node.js** (v18+) and **npm** installed.
