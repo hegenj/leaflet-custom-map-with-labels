@@ -2,3 +2,7 @@ node_modules/
 dist/
 .DS_Store
 leaflet-custom-map-with-labels-*.tgz
+examples/angular/node_modules/
+examples/angular/dist/
+examples/angular/.angular/
+examples/angular/.DS_Store
