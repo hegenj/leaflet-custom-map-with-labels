@@ -2,7 +2,7 @@
 
 A high-performance Leaflet plugin for rendering priority-based labels on an HTML5 Canvas. This library allows you to display thousands of labels with collision detection, custom styling, and seamless Leaflet integration.
 
-📜 Acknowledgments & Credits
+## 📜 Acknowledgments & Credits
 
 This library is a TypeScript-ready wrapper built upon the core labeling logic developed by [@samanbey](https://github.com/samanbey).
 
@@ -91,22 +91,20 @@ This is the simplest way to use the library in a plain HTML/JS environment.
     <div id="map"></div>
     <script>
       // Initialize the specialized map
-      const map = L.mapWithLabels("map").setView([47.5, 19.0], 10);
+      const map = L.mapWithLabels('map').setView([47.5, 19.0], 10);
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-        map,
-      );
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
       // Add a GeoJSON layer with labels
       L.geoJson(myData, {
         label: (layer) => layer.feature.properties.name,
-        labelPos: "cc",
+        labelPos: 'cc',
         labelStyle: {
-          fontWeight: "bold",
-          whiteSpace: "normal",
-          minWidth: "40px",
-          textAlign: "center",
-          color: "brown",
+          fontWeight: 'bold',
+          whiteSpace: 'normal',
+          minWidth: '40px',
+          textAlign: 'center',
+          color: 'brown',
         },
         priority: (layer) => layer.feature.properties.population,
       }).addTo(map);
@@ -219,8 +217,9 @@ Navigate to the example directory:
 
 ```bash
 cd examples/angular
-Install dependencies:
 ```
+
+Install dependencies:
 
 ```bash
 npm install
@@ -250,16 +249,12 @@ The app will be available at http://localhost:4200.
 ```
 
 ```typescript
-import { Component, OnInit } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import {
-  L,
-  mapWithLabels,
-  MapWithLabelsGeoJSONOptions,
-} from "@leaflet-custom/map-with-labels";
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { L, mapWithLabels, MapWithLabelsGeoJSONOptions } from '@leaflet-custom/map-with-labels';
 
 @Component({
-  selector: "app-root",
+  selector: 'app-root',
   standalone: true,
   template: `<div id="map" style="height: 100vh;"></div>`,
 })
@@ -268,22 +263,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Initialize the specialized map
-    const map = mapWithLabels("map").setView([47.16, 19.5], 7);
+    const map = mapWithLabels('map').setView([47.16, 19.5], 7);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-      map,
-    );
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     // Fetch and display GeoJSON with custom labels
-    this.http.get("assets/hu_counties.geojson").subscribe((data) => {
+    this.http.get('assets/hu_counties.geojson').subscribe((data) => {
       const options: MapWithLabelsGeoJSONOptions = {
-        style: { color: "#34495e", weight: 2 },
+        style: { color: '#34495e', weight: 2 },
         label: (layer: Layer<any>) => layer.feature.properties.name,
-        labelPos: "cc", // Center-Center
+        labelPos: 'cc', // Center-Center
         labelStyle: {
-          color: "brown",
-          fontWeight: "bold",
-          fontSize: "14px",
+          color: 'brown',
+          fontWeight: 'bold',
+          fontSize: '14px',
         },
       };
 
@@ -313,24 +306,31 @@ Ensure the main library is built before running the React app:
 npm run build
 ```
 
+```bash
+cd examples/react
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
 ### 📖 Usage Guide
 
 1. Vite Configuration (vite.config.ts)
    Since the library is not yet published to NPM, tell Vite where to find the source files using an alias:
 
 ```typescript
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@leaflet-custom/map-with-labels": path.resolve(
-        __dirname,
-        "../../dist/index.js",
-      ),
+      '@leaflet-custom/map-with-labels': path.resolve(__dirname, '../../dist/index.js'),
     },
   },
 });
@@ -420,24 +420,31 @@ Ensure the main library is built:
 npm run build
 ```
 
+```bash
+cd examples/vue
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
 ### 📖 Usage Guide
 
 1. Vite Configuration (vite.config.ts)
    Since we are using a local build, add an alias to your Vite config:
 
 ```typescript
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import path from "path";
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import path from 'path';
 
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      "@leaflet-custom/map-with-labels": path.resolve(
-        __dirname,
-        "../../dist/index.js",
-      ),
+      '@leaflet-custom/map-with-labels': path.resolve(__dirname, '../../dist/index.js'),
     },
   },
 });

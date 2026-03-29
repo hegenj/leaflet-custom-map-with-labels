@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "allowJs": true,
     "paths": {
-      "@leaflet-custom/map-with-labels": ["../../dist/index.d.ts"]
+      "@leaflet-custom/map-with-labels": ["../../dist"]
     }
   },
   "angularCompilerOptions": {
