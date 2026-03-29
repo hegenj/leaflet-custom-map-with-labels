@@ -18,7 +18,7 @@ To get you started quickly, we provide production-ready implementation examples 
 
 ### 📂 Repository Structure
 
-````plaintext
+```plaintext
 .
 ├── src/                # Core library source (TypeScript)
 ├── dist/               # Compiled bundles and type definitions
@@ -28,7 +28,10 @@ To get you started quickly, we provide production-ready implementation examples 
     ├── react/          # React + Vite example
     └── vue/            # Vue 3 + Vite example
 
+```
+
 ---
+
 ## Features
 
 - 🚀 **Canvas Rendering**: Handles thousands of labels without slowing down the map.
@@ -45,7 +48,7 @@ Since this package is currently in development, you can install it directly from
 
 ```bash
 npm install https://github.com/hegenj/leaflet-custom-map-with-labels.git
-````
+```
 
 ---
 
