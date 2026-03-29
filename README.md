@@ -397,6 +397,12 @@ function App() {
 }
 ```
 
+Start the development server:
+
+```bash
+npm run dev
+```
+
 ### ⚠️ Common React Pitfalls
 
 Map Container Height: The div containing the map must have a defined height (e.g., height: 100vh or 500px), otherwise the map will have 0px height and won't be visible.
@@ -404,6 +410,119 @@ Map Container Height: The div containing the map must have a defined height (e.g
 Ref Type Safety: Always use useRef<L.Map | null>(null) to ensure TypeScript correctly handles Leaflet methods and prevents "null pointer" errors during asynchronous data loading (like fetch).
 
 CSS Import: Ensure leaflet/dist/leaflet.css is imported in your App.tsx or main.tsx to prevent tile misalignment.
+
+## 🟢 Vue.js 3 Integration
+
+Vue 3 works seamlessly with the library using the Composition API. To ensure optimal performance, we use shallowRef for the map instance to prevent Vue from making the entire Leaflet object tree reactive.
+
+### 🛠️ Prerequisites
+
+Ensure the main library is built:
+
+```bash
+npm run build
+```
+
+### 📖 Usage Guide
+
+1. Vite Configuration (vite.config.ts)
+   Since we are using a local build, add an alias to your Vite config:
+
+```typescript
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import path from "path";
+
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      "@leaflet-custom/map-with-labels": path.resolve(
+        __dirname,
+        "../../dist/index.js",
+      ),
+    },
+  },
+});
+```
+
+2. Component Implementation (App.vue)
+
+```typescript
+<script setup lang="ts">
+import { onMounted, onUnmounted, useTemplateRef, shallowRef } from 'vue';
+import { L, mapWithLabels } from '@leaflet-custom/map-with-labels';
+import 'leaflet/dist/leaflet.css';
+
+// Get a reference to the DOM element
+const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer');
+
+// Use shallowRef for third-party objects like Leaflet maps
+const leafletMap = shallowRef<L.Map | null>(null);
+
+onMounted(() => {
+  if (!mapContainer.value) return;
+
+  // Initialize the map with our custom factory
+  const map = mapWithLabels(mapContainer.value).setView([47.16, 19.50], 7);
+  leafletMap.value = map;
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  // Example: GeoJSON with auto-labels
+  fetch('/hu_counties.geojson')
+    .then(res => res.json())
+    .then(data => {
+      if (leafletMap.value) {
+        L.geoJson(data, {
+          label: (layer: any) => layer.feature.properties.name,
+          labelPos: 'cc',
+          labelStyle: {
+            color: '#27ae60',
+            fontSize: '13px',
+            fontWeight: '600'
+          }
+        }).addTo(leafletMap.value);
+      }
+    });
+});
+
+// Cleanup to prevent memory leaks
+onUnmounted(() => {
+  if (leafletMap.value) {
+    leafletMap.value.remove();
+    leafletMap.value = null;
+  }
+});
+</script>
+
+<template>
+  <div class="map-container" ref="mapContainer"></div>
+</template>
+
+<style scoped>
+.map-container {
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+⚠️ Vue-Specific Tips
+shallowRef vs ref: Never put a Leaflet map instance into a standard ref(). Vue's deep reactivity will attempt to proxy thousands of internal Leaflet properties, leading to massive performance degradation.
+
+Lifecycle Hooks: Always initialize Leaflet in onMounted. The DOM element is not available before this stage.
+
+Memory Management: Always call map.remove() in onUnmounted to ensure all Canvas event listeners and intervals are cleared, especially in Single Page Applications (SPA).
+
+---
 
 ## License
 
