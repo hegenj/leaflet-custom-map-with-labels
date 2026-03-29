@@ -2,6 +2,33 @@
 
 A high-performance Leaflet plugin for rendering priority-based labels on an HTML5 Canvas. This library allows you to display thousands of labels with collision detection, custom styling, and seamless Leaflet integration.
 
+### 🌐 Framework Agnostic by Design
+
+The core engine is written in pure TypeScript, making it 100% framework agnostic. Whether you are building a simple static site or a complex enterprise application, this plugin integrates effortlessly into any modern JavaScript ecosystem.
+
+To get you started quickly, we provide production-ready implementation examples for the four most popular environments:
+
+- 🖼️ Vanilla JS – For lightweight, zero-dependency projects.
+
+- 🅰️ Angular – Using standalone components and HttpClient integration.
+
+- ⚛️ React – Managed via useRef and useEffect with React 18+ support.
+
+- 🟢 Vue.js 3 – Optimized with shallowRef for high-performance reactivity.
+
+### 📂 Repository Structure
+
+````plaintext
+.
+├── src/                # Core library source (TypeScript)
+├── dist/               # Compiled bundles and type definitions
+└── examples/           # Framework-specific implementations
+    ├── vanilla/        # Pure JS / HTML example
+    ├── angular/        # Angular (v17+) example
+    ├── react/          # React + Vite example
+    └── vue/            # Vue 3 + Vite example
+
+---
 ## Features
 
 - 🚀 **Canvas Rendering**: Handles thousands of labels without slowing down the map.
@@ -18,7 +45,7 @@ Since this package is currently in development, you can install it directly from
 
 ```bash
 npm install https://github.com/hegenj/leaflet-custom-map-with-labels.git
-```
+````
 
 ---
 
@@ -165,6 +192,8 @@ npm run start:exampleJS
 Once started, open your browser at:
 http://localhost:8080/examples/vanilla/index.html
 
+---
+
 ## 🅰️ Angular Example
 
 This example demonstrates how to use @leaflet-custom/map-with-labels within a modern Angular (v17+) environment using standalone components and HttpClient.
@@ -197,8 +226,9 @@ Install dependencies:
 
 ```bash
 npm install
-Start the development server:
 ```
+
+Start the development server:
 
 ```bash
 npm start
@@ -273,10 +303,105 @@ Re-building: If you modify the core library source code, remember to run **npm r
 
 ---
 
+## ⚛️ React Integration
+
+React manages the DOM differently than Leaflet, so we use useRef to maintain the map instance and useEffect for initialization.
+
+### 🛠️ Prerequisites
+
+Ensure the main library is built before running the React app:
+
+```bash
+npm run build
+```
+
+### 📖 Usage Guide
+
+1. Vite Configuration (vite.config.ts)
+   Since the library is not yet published to NPM, tell Vite where to find the source files using an alias:
+
+```typescript
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@leaflet-custom/map-with-labels": path.resolve(
+        __dirname,
+        "../../dist/index.js",
+      ),
+    },
+  },
+});
+```
+
+2. Main Implementation (App.tsx)
+
+```typescript
+
+import { useEffect, useRef } from 'react';
+import { L, mapWithLabels } from '@leaflet-custom/map-with-labels';
+import 'leaflet/dist/leaflet.css';
+
+function App() {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    // Prevent double initialization in React 18 Strict Mode
+    if (!mapRef.current || mapInstance.current) return;
+
+    // Initialize using the custom factory
+    const map = mapWithLabels(mapRef.current).setView([47.16, 19.50], 7);
+    mapInstance.current = map;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // Example: Loading GeoJSON with automatic labels
+    fetch('/hu_counties.geojson')
+      .then(res => res.json())
+      .then(data => {
+        if (mapInstance.current) {
+          L.geoJson(data, {
+            label: (layer: any) => layer.feature.properties.name,
+            labelPos: 'cc',
+            labelStyle: {
+              color: '#2c3e50',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }
+          }).addTo(mapInstance.current);
+        }
+      });
+
+    // Cleanup when component unmounts
+    return () => {
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
+      }
+    };
+  }, []);
+
+  return (
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
+}
+```
+
+### ⚠️ Common React Pitfalls
+
+Map Container Height: The div containing the map must have a defined height (e.g., height: 100vh or 500px), otherwise the map will have 0px height and won't be visible.
+
+Ref Type Safety: Always use useRef<L.Map | null>(null) to ensure TypeScript correctly handles Leaflet methods and prevents "null pointer" errors during asynchronous data loading (like fetch).
+
+CSS Import: Ensure leaflet/dist/leaflet.css is imported in your App.tsx or main.tsx to prevent tile misalignment.
+
 ## License
 
 MIT
-
-```
-
-```
