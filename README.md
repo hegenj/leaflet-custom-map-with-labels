@@ -2,6 +2,24 @@
 
 A high-performance Leaflet plugin for rendering priority-based labels on an HTML5 Canvas. This library allows you to display thousands of labels with collision detection, custom styling, and seamless Leaflet integration.
 
+📜 Acknowledgments & Credits
+
+This library is a TypeScript-ready wrapper built upon the core labeling logic developed by [@samanbey](https://github.com/samanbey).
+
+- Core Engine: The high-performance Canvas labeling and collision detection logic is based on the [leaflet-mapwithlabels](https://github.com/samanbey/leaflet-mapwithlabels) repository.
+
+💡This version adds:
+
+- Full TypeScript support (Type definitions).
+
+- Modern ESM bundling with Vite.
+
+- Framework-agnostic wrapper factory.
+
+- Ready-to-use examples for Angular, React, and Vue.js.
+
+---
+
 ### 🌐 Framework Agnostic by Design
 
 The core engine is written in pure TypeScript, making it 100% framework agnostic. Whether you are building a simple static site or a complex enterprise application, this plugin integrates effortlessly into any modern JavaScript ecosystem.
