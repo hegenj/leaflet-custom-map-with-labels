@@ -99,40 +99,6 @@ This is the simplest way to use the library in a plain HTML/JS environment.
 
 ---
 
-## Usage in Angular (Nx / CLI)
-
-After installing the package, you can use it in your Angular components.
-
-```typescript
-import { Component, OnInit } from "@angular/core";
-// Import the library and Leaflet namespace
-import { L, mapWithLabels } from "@leaflet-custom/map-with-labels";
-
-@Component({
-  selector: "app-map",
-  template: '<div id="map" style="height: 500px;"></div>',
-})
-export class MapComponent implements OnInit {
-  ngOnInit() {
-    // Initialize map using the custom factory
-    const map = mapWithLabels("map").setView([47, 19], 7);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-      map,
-    );
-
-    // Labels are automatically handled by the Canvas renderer
-    L.geoJson(geoData, {
-      label: (layer: Label<any>) => layer.feature?.properties.cityName,
-      labelStyle: { color: "blue", fontSize: "12px" },
-      priority: (layer: any) => layer.feature.properties.rank,
-    }).addTo(map);
-  }
-}
-```
-
----
-
 ## API Reference
 
 ### `mapWithLabels(id, options)`
@@ -186,7 +152,9 @@ npm install
 npm run build
 ```
 
-## Vanilla JS Example
+---
+
+## 🖼️ Vanilla JS Example
 
 ```bash
 npm run start:exampleJS
@@ -411,6 +379,8 @@ Ref Type Safety: Always use useRef<L.Map | null>(null) to ensure TypeScript corr
 
 CSS Import: Ensure leaflet/dist/leaflet.css is imported in your App.tsx or main.tsx to prevent tile misalignment.
 
+---
+
 ## 🟢 Vue.js 3 Integration
 
 Vue 3 works seamlessly with the library using the Composition API. To ensure optimal performance, we use shallowRef for the map instance to prevent Vue from making the entire Leaflet object tree reactive.
@@ -516,6 +486,7 @@ npm run dev
 ```
 
 ⚠️ Vue-Specific Tips
+
 shallowRef vs ref: Never put a Leaflet map instance into a standard ref(). Vue's deep reactivity will attempt to proxy thousands of internal Leaflet properties, leading to massive performance degradation.
 
 Lifecycle Hooks: Always initialize Leaflet in onMounted. The DOM element is not available before this stage.
